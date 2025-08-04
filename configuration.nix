@@ -6,12 +6,10 @@
       ./hardware-configuration.nix
     ];
 
-  # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos";
-  networking.networkmanager.enable = true;
+  networking.hostName = "nixos"; networking.networkmanager.enable = true;
   networking.interfaces.eth0.ipv4.addresses = [ { address = "192.168.1.99"; prefixLength = 24; } ];
   networking.defaultGateway = "192.168.1.1";
   networking.nameservers = [ "8.8.8.8" ];
@@ -30,14 +28,13 @@
     LC_TELEPHONE = "pt_BR.UTF-8";
     LC_TIME = "pt_BR.UTF-8";
   };
+  programs.firefox.enable = true;
+  programs.zsh.enable = true;
 
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
-  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -46,7 +43,6 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -62,44 +58,50 @@
   };
 
   services.flatpak.enable = true;
-  fonts.packages = with pkgs; [
-    nerd-fonts.iosevka-term
-    nerd-fonts.comic-shanns-mono
-  ];
+  users.defaultUserShell=pkgs.zsh; 
   users.users.lacon = {
     isNormalUser = true;
     description = " jose bruno";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    flatpak
-    lazygit
-    git
-    rofi
-    stow
-    zoxide
-    librewolf
-    vim
-    alacritty
-    tmux
-    neovim
-    wget
-    dysk
-    xclip
-
-    ];
+    shell=pkgs.zsh;
   };
-
-  programs.firefox.enable = true;
   nixpkgs.config.allowUnfree = true;
 
-  # $ nix search wget
+  environment.shellAliases = {
+    ll = "ls -l";
+  };
   environment.systemPackages = with pkgs; [
-  #  vim 
-  #  wget
+    ripgrep
+    libgccjit
+    zsh-autosuggestions
+    git
+    dysk
+    xclip
+    librewolf
+    curl
+    stow
+    zoxide
+    obsidian
+    qbittorrent
+    vlc
+
+    alacritty
+    tmux
+
+    mangohud 
+    protonup-qt 
+    lutris 
+    bottles 
+    heroic
+    gearlever
   ];
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  fonts.packages = with pkgs; [
+    nerd-fonts.iosevka-term
+    nerd-fonts.comic-shanns-mono
+    nerd-fonts.shure-tech-mono
+  ];
 
+  # services.openssh.enable = true;
   system.stateVersion = "25.05";
 }
