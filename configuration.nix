@@ -12,6 +12,15 @@
     firefox.enable = true;
     zsh.enable = true;
     gamemode.enable = true;
+    java.enable = true;
+    thunar.enable  = true;
+    xfconf.enable  = true;
+    virt-manager.enable  = true;
+  };
+
+  virtualisation = {
+    libvirtd.enable = true;
+    spiceUSBRedirection.enable = true;
   };
 
   services = {
@@ -38,19 +47,26 @@
         layout = "us";
         variant = "";
       };
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
+      displayManager = {
+        defaultSession = "xterm+i3";
+        gdm.enable = true;
+      };
+      desktopManager = {
+        gnome.enable = true;
+        xterm.enable = true;
+      };
       windowManager.i3 = {
         enable = true;
-        extraPackages = with pkgs [
-          dmenu
-          i3status
-          i3lock
-        ]
+        extraPackages = with pkgs; [
+            rofi
+            feh
+            i3status 
+            i3lock 
+            picom
+        ];
       };
     };
   };
-
 
   users = {
     defaultUserShell=pkgs.zsh; 
@@ -58,7 +74,7 @@
       lacon = {
         isNormalUser = true;
         description = " jose bruno";
-        extraGroups = [ "networkmanager" "wheel" ];
+        extraGroups = [ "networkmanager" "wheel" "libvirtd"];
         shell=pkgs.zsh;
       };
     };
@@ -72,18 +88,21 @@
     };
 
     systemPackages = with pkgs; [
-      nixd
+        nixd
+        hyperfine
         gopls
 
         hugo
         nodejs_24
 
+        qemu
         libgcc
         ripgrep
         zsh-autosuggestions
         git
         dysk
         xclip
+        vivaldi
         librewolf
         curl
         stow
@@ -95,15 +114,19 @@
         jellyfin
         jellyfin-web
         jellyfin-ffmpeg
+        visidata
 
         alacritty
+        ghostty
         wezterm
+        kitty
         tmux
 
         mangohud 
+        prismlauncher
+        lutris
         protonup-qt 
         bottles 
-        heroic
         gearlever
 
         btop
@@ -113,6 +136,7 @@
         go
         vim
         neovim
+        lua-language-server
 
         ];
   };
