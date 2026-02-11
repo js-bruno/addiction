@@ -102,9 +102,12 @@
       systemPackages = with pkgs; [
           flameshot
           xclip
+          unzip
+          zip
           pavucontrol
           nixd
           hyperfine
+          golangci-lint
           gopls
 
           vscode
@@ -132,13 +135,17 @@
           obsidian
           qbittorrent
           vlc
+          kdePackages.kdenlive
           stremio
           plex
           jellyfin
           jellyfin-web
           jellyfin-ffmpeg
           visidata
-
+          gnomeExtensions.caffeine
+          gnome-boxes
+          gnome-feeds
+          newsflash
           alacritty
           ghostty
           wezterm
@@ -146,7 +153,6 @@
           tmux
           kando
           fzf
-
           sqlitebrowser
           prismlauncher
           lutris
@@ -162,16 +168,21 @@
           fortune
           lazygit
 
+          gnumake
           go
+          lua
           vim
           neovim
+          mongosh
+          vi-mongo
           lua-language-server
 
           ];
     };
 
     fonts.packages = with pkgs; [
-      nerd-fonts.go-mono
+        nerd-fonts.go-mono
+        nerd-fonts.agave
         nerd-fonts.iosevka-term
         nerd-fonts.daddy-time-mono
         nerd-fonts.envy-code-r
