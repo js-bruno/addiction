@@ -1,6 +1,16 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
+let
+  # nixpkgs pinnado no commit do neovim 0.11.2
+  pkgs-0_11 = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/e6f23dc08d3624daab7094b701aa3954923c6bbb.tar.gz";
+  }) { inherit (pkgs) system; };
 
-{
+  # nixpkgs-unstable atual (tem 0.12)
+  pkgs-0_12 = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+  }) { inherit (pkgs) system; };
+
+in {
   imports =
     [ 
     ./hardware-configuration.nix
@@ -37,6 +47,12 @@
     services = {
       printing.enable = true;
       pulseaudio.enable = false;
+      resolved = {
+        enable = true;
+        extraConfig = ''
+          DNSStubListener=no
+          '';
+      };
       flatpak.enable = true;
 
       jellyfin = {
@@ -100,6 +116,14 @@
       };
 
       systemPackages = with pkgs; [
+      (pkgs-0_11.writeShellScriptBin "nvim-0_11" ''
+          NVIM_APPNAME=nvim-0_11 exec ${pkgs-0_11.neovim}/bin/nvim "$@"
+        '')
+
+        (pkgs-0_12.writeShellScriptBin "nvim-0_12" ''
+          NVIM_APPNAME=nvim-0_12 exec ${pkgs-0_12.neovim}/bin/nvim "$@"
+        '')
+
           flameshot
           xclip
           unzip
@@ -120,6 +144,7 @@
           typescript-language-server
           vue-language-server
 
+          spotify
           ungoogled-chromium
           qemu
           libgcc
@@ -142,7 +167,7 @@
           jellyfin-web
           jellyfin-ffmpeg
           visidata
-          gnomeExtensions.caffeine
+          gnome-tweaks
           gnome-boxes
           gnome-feeds
           newsflash
@@ -172,7 +197,6 @@
           go
           lua
           vim
-          neovim
           mongosh
           vi-mongo
           lua-language-server
@@ -181,6 +205,7 @@
     };
 
     fonts.packages = with pkgs; [
+        nerd-fonts.blex-mono
         nerd-fonts.go-mono
         nerd-fonts.agave
         nerd-fonts.iosevka-term
@@ -195,21 +220,37 @@
       loader.efi.canTouchEfiVariables = true;
     };
 
+    boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 50;
+    boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_end" = 80;
     security.rtkit.enable = true;
     networking = {
       hostName = "nixos"; 
       networkmanager.enable = true;
       interfaces.eth0.ipv4.addresses = [ { address = "192.168.1.99"; prefixLength = 24; } ];
       defaultGateway = "192.168.1.1";
-      nameservers = [ "1.1.1.1" "8.8.8.8" ];
+      nameservers = [ "127.0.0.1" "1.1.1.1" "8.8.8.8" ];
       useDHCP = false;
       hosts = {
         "185.199.110.133" = ["raw.githubusercontent.com"];
+        "127.0.0.1" = [
+            "portainer.homelab.local"
+            "vikunja.homelab.local"
+            "grafana.homelab.local"
+            "uptime.homelab.local"
+            "mealie.homelab.local"
+            "vault.homelab.local"
+            "homepage.homelab.local"
+            "media.homelab.local"
+        ];
       };
     };
     time.timeZone = "America/Fortaleza";
     i18n = {
       defaultLocale = "pt_BR.UTF-8";
+      supportedLocales = [
+	      "pt_BR.UTF-8/UTF-8"
+	      "ru_RU.UTF-8/UTF-8"   # adicione esta linha
+      ];
       extraLocaleSettings = {
         LC_ADDRESS = "pt_BR.UTF-8";
         LC_IDENTIFICATION = "pt_BR.UTF-8";
