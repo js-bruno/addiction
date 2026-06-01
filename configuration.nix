@@ -1,20 +1,13 @@
 { config, pkgs, lib, ... }:
-let
-  # nixpkgs pinnado no commit do neovim 0.11.2
-  pkgs-0_11 = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/e6f23dc08d3624daab7094b701aa3954923c6bbb.tar.gz";
-  }) { inherit (pkgs) system; };
+{ 
+  imports = [ ./hardware-configuration.nix ./desktop.nix ];
 
-  # nixpkgs-unstable atual (tem 0.12)
-  pkgs-0_12 = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
-  }) { inherit (pkgs) system; };
+  boot.tmp.useTmpfs = true;
+  boot.tmp.tmpfsSize = "10G"; 
 
-in {
-  imports =
-    [ 
-    ./hardware-configuration.nix
-    ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-36.9.5"
+  ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
@@ -26,6 +19,11 @@ in {
     thunar.enable  = true;
     xfconf.enable  = true;
     virt-manager.enable  = true;
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = false;
+    };
   };
 
   virtualisation = {
@@ -54,6 +52,13 @@ in {
           '';
       };
       flatpak.enable = true;
+      # nginx = {
+      #   enable = true;
+      #   virtualHosts."blog.local" = {
+      #     listen = [{ addr = "127.0.0.1"; port = 9000; }];
+      #     root = "/home/lacon/projects/astro-project/dist";
+      #   };
+      # };
 
       jellyfin = {
         enable = true;
@@ -68,32 +73,6 @@ in {
         wireplumber.enable = true;
       };
 
-      xserver = {
-        enable = true;
-        xkb = {
-          layout = "us";
-          variant = "";
-        };
-        displayManager = {
-          defaultSession = "gnome-xorg";
-          gdm.enable = true;
-        };
-        desktopManager = {
-          gnome.enable = true;
-          xterm.enable = true;
-        };
-        windowManager.i3 = {
-          enable = true;
-          extraPackages = with pkgs; [
-              rofi
-              feh
-              i3status 
-              i3lock 
-              picom
-              polybar
-          ];
-        };
-      };
     };
 
     users = {
@@ -116,38 +95,38 @@ in {
       };
 
       systemPackages = with pkgs; [
-      (pkgs-0_11.writeShellScriptBin "nvim-0_11" ''
-          NVIM_APPNAME=nvim-0_11 exec ${pkgs-0_11.neovim}/bin/nvim "$@"
-        '')
-
-        (pkgs-0_12.writeShellScriptBin "nvim-0_12" ''
-          NVIM_APPNAME=nvim-0_12 exec ${pkgs-0_12.neovim}/bin/nvim "$@"
-        '')
+      # (pkgs-0_11.writeShellScriptBin "nvim-0_11" ''
+      #     NVIM_APPNAME=nvim-0_11 exec ${pkgs-0_11.neovim}/bin/nvim "$@"
+      #   '')
+      #
+      #   (pkgs-0_12.writeShellScriptBin "nvim-0_12" ''
+      #     NVIM_APPNAME=nvim-0_12 exec ${pkgs-0_12.neovim}/bin/nvim "$@"
+      #   '')
 
           flameshot
+          mpv
+          v4l-utils
           xclip
           unzip
           zip
           pavucontrol
-          nixd
+          # nixd
+          nil
           hyperfine
-          golangci-lint
-          gopls
 
-          vscode
+          android-tools
+          dig
+          ntfs3g
+          zed-editor
+          # vscode
+          neovim
+          gh
           docker-compose
           lazydocker
-          discord-ptb
           hugo
           sqlite
-          nodejs_24
-          typescript-language-server
-          vue-language-server
-
-          spotify
-          ungoogled-chromium
-          qemu
-          libgcc
+          ncdu
+          # ungoogled-chromium
           ripgrep
           zsh-autosuggestions
           git
@@ -157,17 +136,17 @@ in {
           curl
           stow
           zoxide
-          obsidian
+          caligula
+          freshfetch
           qbittorrent
           vlc
-          kdePackages.kdenlive
           stremio
           plex
-          jellyfin
-          jellyfin-web
-          jellyfin-ffmpeg
           visidata
           gnome-tweaks
+          adw-gtk3
+          colloid-gtk-theme
+          yaru-theme
           gnome-boxes
           gnome-feeds
           newsflash
@@ -176,14 +155,15 @@ in {
           wezterm
           kitty
           tmux
-          kando
+          # kando
           fzf
           sqlitebrowser
           prismlauncher
           lutris
-          wine
-          wine64
-          winetricks
+          jstest-gtk
+          p7zip
+          heroic
+          gamemode
           vulkan-tools
           protonup-qt 
           bottles 
@@ -193,14 +173,37 @@ in {
           fortune
           lazygit
 
-          gnumake
-          go
-          lua
           vim
           mongosh
           vi-mongo
+
+          blanket
+
+          golangci-lint
+          gopls
+          nodejs_24
+          typescript-language-server
+          vue-language-server
+          gcc
+          libgcc
+          gnumake
+          go
+          lua
           lua-language-server
 
+          spotify
+          discord-ptb
+          obsidian
+          kdePackages.kdenlive
+
+          qemu
+          wine
+          wine64
+          winetricks
+
+          jellyfin
+          jellyfin-web
+          jellyfin-ffmpeg
           ];
     };
 
@@ -228,12 +231,12 @@ in {
       networkmanager.enable = true;
       interfaces.eth0.ipv4.addresses = [ { address = "192.168.1.99"; prefixLength = 24; } ];
       defaultGateway = "192.168.1.1";
-      nameservers = [ "127.0.0.1" "1.1.1.1" "8.8.8.8" ];
+      nameservers = ["1.1.1.1" "8.8.8.8" ];
       useDHCP = false;
       hosts = {
         "185.199.110.133" = ["raw.githubusercontent.com"];
         "127.0.0.1" = [
-            "portainer.homelab.local"
+            # "portainer.homelab.local"
             "vikunja.homelab.local"
             "grafana.homelab.local"
             "uptime.homelab.local"
@@ -241,6 +244,7 @@ in {
             "vault.homelab.local"
             "homepage.homelab.local"
             "media.homelab.local"
+            "zbruno.blog.com.br"
         ];
       };
     };
@@ -248,8 +252,8 @@ in {
     i18n = {
       defaultLocale = "pt_BR.UTF-8";
       supportedLocales = [
-	      "pt_BR.UTF-8/UTF-8"
-	      "ru_RU.UTF-8/UTF-8"   # adicione esta linha
+          "pt_BR.UTF-8/UTF-8"
+          "ru_RU.UTF-8/UTF-8"
       ];
       extraLocaleSettings = {
         LC_ADDRESS = "pt_BR.UTF-8";
@@ -264,4 +268,16 @@ in {
       };
     };
     system.stateVersion = "25.05";
-  }
+}
+
+# let
+  # # nixpkgs pinnado no commit do neovim 0.11.2
+  # pkgs-0_11 = import (builtins.fetchTarball {
+  #   url = "https://github.com/NixOS/nixpkgs/archive/e6f23dc08d3624daab7094b701aa3954923c6bbb.tar.gz"; }) { inherit (pkgs) system; };
+  
+  # # nixpkgs-unstable atual (tem 0.12)
+  # pkgs-0_12 = import (builtins.fetchTarball {
+  #   url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+  # }) { inherit (pkgs) system; };
+
+# in {
