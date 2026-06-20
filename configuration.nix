@@ -1,13 +1,13 @@
 { config, pkgs, lib, ... }:
 { 
-  imports = [ ./hardware-configuration.nix ./desktop.nix ];
-
-  boot.tmp.useTmpfs = true;
-  boot.tmp.tmpfsSize = "10G"; 
+  imports = [ ./hardware-configuration.nix ./desktop.nix ./minecraft_server.nix];
 
   nixpkgs.config.permittedInsecurePackages = [
     "electron-36.9.5"
   ];
+
+  boot.tmp.useTmpfs = true;
+  boot.tmp.tmpfsSize = "10G"; 
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
