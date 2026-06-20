@@ -1,6 +1,7 @@
 {pkgs, lib, ...}:
 {
   services.minecraft-server = {
+    package = pkgs.papermc;
     enable = true;
     eula = true;
     declarative = true;
