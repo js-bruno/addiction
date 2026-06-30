@@ -1,15 +1,25 @@
 { config, pkgs, lib, ... }:
 { 
-  imports = [ ./hardware-configuration.nix ./desktop.nix ./minecraft_server.nix];
-
+  imports = [ ./hardware-configuration.nix ./desktop.nix];
+  system.stateVersion = "25.05";
+  nixpkgs.config.allowUnfree = true;
+  nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.permittedInsecurePackages = [
     "electron-36.9.5"
   ];
+  security.rtkit.enable = true;
 
-  boot.tmp.useTmpfs = true;
-  boot.tmp.tmpfsSize = "10G"; 
-
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  fonts.packages = with pkgs; [
+      monocraft
+      nerd-fonts.blex-mono
+      nerd-fonts.go-mono
+      nerd-fonts.agave
+      nerd-fonts.iosevka-term
+      nerd-fonts.daddy-time-mono
+      nerd-fonts.envy-code-r
+      nerd-fonts.comic-shanns-mono
+      nerd-fonts.shure-tech-mono
+  ];
 
   programs = {
     firefox.enable = true;
@@ -30,7 +40,7 @@
     libvirtd.enable = true;
     spiceUSBRedirection.enable = true;
     docker = {
-      enable = true;
+      enable = false;
       rootless = {
         enable = true;
         setSocketVariable = true;
@@ -47,24 +57,6 @@
       KERNEL=="uinput", GROUP="uinput", MODE="0660"
       '';
 
-    resolved = {
-      enable = true;
-      extraConfig = ''
-        DNSStubListener=no
-        '';
-      fallbackDns = ["8.8.8.8" "8.8.4.4"];
-    };
-
-    input-remapper.enable = true;
-    printing.enable = true;
-    pulseaudio.enable = false;
-    flatpak.enable = true;
-
-    jellyfin = {
-      enable = true;
-      openFirewall = true;
-    };
-
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -73,6 +65,25 @@
       wireplumber.enable = true;
     };
 
+    resolved = {
+      enable = true;
+      settings = {
+        Resolve = {
+          DNSStubListener = "no";
+        };
+      };
+      fallbackDns = ["8.8.8.8" "8.8.4.4"];
+    };
+
+    jellyfin = {
+      enable = true;
+      openFirewall = true;
+    };
+
+    input-remapper.enable = true;
+    printing.enable = true;
+    pulseaudio.enable = false;
+    flatpak.enable = true;
   };
 
   users = {
@@ -87,7 +98,6 @@
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
 
   environment = {
     sessionVariables = {
@@ -128,6 +138,7 @@
       sqlite
       ncdu
 
+      chromium
       vivaldi
       ripgrep
       zsh-autosuggestions
@@ -143,7 +154,6 @@
       freshfetch
       qbittorrent
       vlc
-      stremio
       plex
       visidata
       gnome-tweaks
@@ -161,7 +171,6 @@
 
       fzf
       sqlitebrowser
-      prismlauncher
       lutris
       jstest-gtk
       p7zip
@@ -169,7 +178,6 @@
       vulkan-tools
       protonup-qt 
       bottles 
-      gearlever
 
       bluetui
       btop
@@ -180,16 +188,19 @@
       mongosh
       vi-mongo
 
+      gearlever
       blanket
 
       golangci-lint
       gopls
       nodejs_24
+      uv
       typescript-language-server
       vue-language-server
       gcc
       libgcc
       gnumake
+      python3
       go
       lua
       lua-language-server
@@ -210,32 +221,8 @@
       ];
   };
 
-  fonts.packages = with pkgs; [
-      monocraft
-      nerd-fonts.blex-mono
-      nerd-fonts.go-mono
-      nerd-fonts.agave
-      nerd-fonts.iosevka-term
-      nerd-fonts.daddy-time-mono
-      nerd-fonts.envy-code-r
-      nerd-fonts.comic-shanns-mono
-      nerd-fonts.shure-tech-mono
-  ];
+  
 
-  boot = {
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-  };
-
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_unprivileged_port_start" = 50;
-    "net.ipv4.ip_unprivileged_port_end" = 80;
-    "net.ipv6.conf.all.disable_ipv6" = 1;
-    "net.ipv6.conf.default.disable_ipv6" = 1;
-    "net.ipv6.conf.eth0.disable_ipv6" = 1;
-  };
-  boot.kernelModules = [ "uinput" ];
-  security.rtkit.enable = true;
   networking = {
     hostName = "nixos"; 
     networkmanager.enable = true;
@@ -276,5 +263,4 @@
       LC_TIME = "pt_BR.UTF-8";
     };
   };
-  system.stateVersion = "25.05";
 }

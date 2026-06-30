@@ -8,10 +8,23 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    tmp.useTmpfs = true;
+    tmp.tmpfsSize = "10G";
+    kernelModules = [ "uinput" "kvm-amd" ];
+    kernel.sysctl = {
+      "net.ipv4.ip_unprivileged_port_start" = 50;
+      "net.ipv4.ip_unprivileged_port_end" = 80;
+      "net.ipv6.conf.all.disable_ipv6" = 1;
+      "net.ipv6.conf.default.disable_ipv6" = 1;
+      "net.ipv6.conf.eth0.disable_ipv6" = 1;
+    };
+    initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
+    initrd.kernelModules = [ ];
+    extraModulePackages = [ ];
+  };
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/ec316ce6-4839-4843-8402-228a4a0a53d9";
