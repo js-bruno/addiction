@@ -8,6 +8,11 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
@@ -63,6 +68,8 @@
   # networking.interfaces.enp3s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  hardware.steam-hardware.enable = true;
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.graphics = {
     enable = true;

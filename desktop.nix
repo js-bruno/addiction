@@ -8,9 +8,16 @@
     };
     # XFCE PACKAGES ;e;
     systemPackages = with pkgs; [
+        pavucontrol
+
         alttab
         xfce.xfce4-whiskermenu-plugin
         xfce.xfce4-docklike-plugin
+
+        lxqt.pavucontrol-qt   
+        lxqt.pcmanfm-qt       
+        lxqt.qterminal        
+        xarchiver   
     ];
   };
 
@@ -19,13 +26,14 @@
       enable = true;
       videoDrivers = [ "nvidia" ];
       displayManager = {
-        defaultSession = "xfce";
+        defaultSession = "lxqt";
         gdm.enable = true;
       };
       desktopManager = {
         gnome.enable = true;
         xterm.enable = true;
         xfce.enable = true;
+        lxqt.enable = true;
       };
       windowManager.i3 = {
         enable = true;

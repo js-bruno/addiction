@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 { 
   imports = [ ./hardware-configuration.nix ./desktop.nix];
+  time.timeZone = "America/Fortaleza";
   system.stateVersion = "25.05";
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -29,6 +30,10 @@
     thunar.enable  = true;
     xfconf.enable  = true;
     virt-manager.enable  = true;
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
     steam = {
       enable = true;
       remotePlay.openFirewall = true;
@@ -57,6 +62,9 @@
       KERNEL=="uinput", GROUP="uinput", MODE="0660"
       '';
 
+    qbittorrent = {
+      enable = true;
+    };
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -98,7 +106,6 @@
     };
   };
 
-
   environment = {
     sessionVariables = {
       SDL_GAMECONTROLLERCONFIG = "030000000c1200000e16000000000000,Generic PS3 Controller,platform:Linux,a:b2,b:b1,x:b3,y:b0,back:b8,start:b9,guide:b12,leftshoulder:b6,rightshoulder:b7,lefttrigger:a2,righttrigger:a5,leftx:a0,lefty:a1,rightx:a3,righty:a4,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftstick:b13,rightstick:b10,";
@@ -111,6 +118,14 @@
     };
 
     systemPackages = with pkgs; [
+      dracula-icon-theme 
+      elementary-xfce-icon-theme
+      kanagawa-icon-theme
+
+
+      mission-center
+      lm_sensors
+      qbittorrent
       joycond
       gparted
       flameshot
@@ -119,8 +134,11 @@
       xclip
       unzip
       zip
-      pavucontrol
+      rar
+      unrar
       nixd
+      appimage-run
+      icu
         # nil
       hyperfine
 
@@ -139,6 +157,7 @@
       ncdu
 
       chromium
+      nyxt
       vivaldi
       ripgrep
       zsh-autosuggestions
@@ -152,7 +171,6 @@
       zoxide
       caligula
       freshfetch
-      qbittorrent
       vlc
       plex
       visidata
@@ -170,6 +188,7 @@
       tmux
 
       fzf
+      qutebrowser
       sqlitebrowser
       lutris
       jstest-gtk
@@ -177,6 +196,7 @@
       heroic
       vulkan-tools
       protonup-qt 
+      protonplus
       bottles 
 
       bluetui
@@ -187,6 +207,8 @@
       vim
       mongosh
       vi-mongo
+
+      lmstudio
 
       gearlever
       blanket
@@ -221,11 +243,32 @@
       ];
   };
 
-  
-
   networking = {
     hostName = "nixos"; 
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      ensureProfiles.profiles = {
+        "Conexao-cabeada-1" = {
+          connection = {
+            id = "Conexão cabeada 1";
+            type = "ethernet";
+            interface-name = "eth0";
+            autoconnect = true;
+            autoconnect-priority = 10;
+          };
+          ipv4.method = "auto";
+          ipv6.method = "auto";
+        };
+
+        "Jose-2" = {
+          connection = {
+            id = "Jose 2";
+            type = "wifi";
+            autoconnect-priority = -10;
+          };
+        };
+      };
+    };
     interfaces.eth0.ipv4.addresses = [ { address = "192.168.1.99"; prefixLength = 24; } ];
     defaultGateway = "192.168.1.1";
     nameservers = ["1.1.1.1" "8.8.8.8" ];
@@ -233,7 +276,7 @@
     hosts = {
       "185.199.110.133" = ["raw.githubusercontent.com"];
       "127.0.0.1" = [
-          "vikunja.homelab.local"
+        "vikunja.homelab.local"
           "grafana.homelab.local"
           "uptime.homelab.local"
           "mealie.homelab.local"
@@ -244,7 +287,6 @@
       ];
     };
   };
-  time.timeZone = "America/Fortaleza";
   i18n = {
     defaultLocale = "pt_BR.UTF-8";
     supportedLocales = [
