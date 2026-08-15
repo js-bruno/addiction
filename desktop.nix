@@ -6,18 +6,22 @@
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       WLR_NO_HARDWARE_CURSORS = "1";
     };
-    # XFCE PACKAGES ;e;
     systemPackages = with pkgs; [
         pavucontrol
-
         alttab
-        xfce.xfce4-whiskermenu-plugin
-        xfce.xfce4-docklike-plugin
+
+        pkgs.openobex
+        pkgs.obexftp
 
         lxqt.pavucontrol-qt   
         lxqt.pcmanfm-qt       
         lxqt.qterminal        
         xarchiver   
+    ];
+    plasma6.excludePackages = with pkgs.kdePackages; [ 
+      elisa 
+      konsole
+      kate
     ];
   };
 
@@ -26,13 +30,12 @@
       enable = true;
       videoDrivers = [ "nvidia" ];
       displayManager = {
-        defaultSession = "lxqt";
+        defaultSession = "plasmax11";
         gdm.enable = true;
       };
       desktopManager = {
-        gnome.enable = true;
+        plasma6.enable = true;
         xterm.enable = true;
-        xfce.enable = true;
         lxqt.enable = true;
       };
       windowManager.i3 = {
@@ -54,7 +57,7 @@
     };
 
     picom = {
-      enable = true;
+      enable = false;
       vSync = true;
       backend= "glx";
 

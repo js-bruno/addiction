@@ -1,0 +1,16 @@
+[0;1;34m# /etc/systemd/user/picom.service -> ]8;;file://nixos/nix/store/myz22jx43dsyyy0p2pmyyb8xjr7ca9mf-unit-picom.service/picom.service\/nix/store/myz22jx43dsyyy0p2pmyyb8xjr7ca9mf-unit-picom.service/picom.service]8;;\[0m
+[0;1;36m[Unit][0m
+[0;1;32mDescription=[0mPicom composite manager
+[0;1;32mPartOf=[0mgraphical-session.target
+
+[0;1;36m[Service][0m
+[0;1;32mEnvironment=[0m"LOCALE_ARCHIVE=/nix/store/7mj5vikb686mbvh576axywy51f3ysxcq-glibc-locales-2.42-67/lib/locale/locale-archive"
+[0;1;32mEnvironment=[0m"PATH=/nix/store/sr26flm2nkfa12dkrwj2630kqsfakky4-coreutils-9.11/bin:/nix/store/zjwih3d9rrrw4ixll52wsy0538p7vdfd-findutils-4.10.0/bin:/nix/store/w8xlvapzxcz23ba312q119p57bnc7200-gnugrep-3.12/bin:/nix/store/0hamsiy8hsyfw1hmizbc3bf93ad7fa1v-gnused-4.9/bin:/nix/store/rd05syhv5v5999907a2n1r37sgi19vpd-systemd-260.2/bin:/nix/store/sr26flm2nkfa12dkrwj2630kqsfakky4-coreutils-9.11/sbin:/nix/store/zjwih3d9rrrw4ixll52wsy0538p7vdfd-findutils-4.10.0/sbin:/nix/store/w8xlvapzxcz23ba312q119p57bnc7200-gnugrep-3.12/sbin:/nix/store/0hamsiy8hsyfw1hmizbc3bf93ad7fa1v-gnused-4.9/sbin:/nix/store/rd05syhv5v5999907a2n1r37sgi19vpd-systemd-260.2/sbin"
+[0;1;32mEnvironment=[0m"TZDIR=/nix/store/ga3b95jkyvknam1nxl25r95nyk87ix25-tzdata-2026b/share/zoneinfo"
+[0;1;32mEnvironment=[0m"allow_rgb10_configs=false"
+[0;1;32mExecStart=[0m/nix/store/g9cfn35ngwcilrr78sabzl96136wh6mc-picom-13/bin/picom --config /nix/store/3hpdfvbgxfcdkfyan1hv024mg5k9svz9-picom.conf
+[0;1;32mRestart=[0malways
+[0;1;32mRestartSec=[0m3
+
+[0;1;36m[Install][0m
+[0;1;32mWantedBy=[0mgraphical-session.target

@@ -69,6 +69,10 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
   hardware.steam-hardware.enable = true;
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.graphics = {

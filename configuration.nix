@@ -155,6 +155,7 @@
       hugo
       sqlite
       ncdu
+      yt-dlp
 
       chromium
       nyxt
@@ -169,6 +170,7 @@
       curl
       stow
       zoxide
+      webcamoid
       caligula
       freshfetch
       vlc
@@ -200,6 +202,7 @@
       bottles 
 
       bluetui
+      television
       btop
       fortune
       lazygit
