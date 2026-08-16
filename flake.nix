@@ -1,9 +1,9 @@
 {
-  description = "My declartive nix-minecraft server with my os configuration";
+  description = "My declartive desktop configuration";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
-
   outputs = {self, nixpkgs, ... }@inputs:
   {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {

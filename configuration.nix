@@ -27,7 +27,6 @@
     zsh.enable = true;
     gamemode.enable = true;
     java.enable = true;
-    thunar.enable  = true;
     xfconf.enable  = true;
     virt-manager.enable  = true;
     appimage = {
@@ -42,7 +41,7 @@
   };
 
   virtualisation = {
-    libvirtd.enable = true;
+    libvirtd.enable = false;
     spiceUSBRedirection.enable = true;
     docker = {
       enable = false;
@@ -78,9 +77,9 @@
       settings = {
         Resolve = {
           DNSStubListener = "no";
+          FallbackDN = ["8.8.8.8" "8.8.4.4"];
         };
       };
-      fallbackDns = ["8.8.8.8" "8.8.4.4"];
     };
 
     jellyfin = {

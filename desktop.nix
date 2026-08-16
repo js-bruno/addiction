@@ -26,18 +26,20 @@
   };
 
   services = {
+    displayManager = {
+      defaultSession = "plasmax11";
+      gdm.enable = true;
+    };
+    desktopManager = {
+      plasma6.enable = true;
+    };
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
-      displayManager = {
-        defaultSession = "plasmax11";
-        gdm.enable = true;
-      };
       desktopManager = {
-        plasma6.enable = true;
-        xterm.enable = true;
         lxqt.enable = true;
+        xterm.enable = true;
       };
+      videoDrivers = [ "nvidia" ];
       windowManager.i3 = {
         enable = true;
         extraPackages = with pkgs; [
