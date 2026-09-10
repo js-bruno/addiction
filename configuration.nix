@@ -4,6 +4,7 @@
   time.timeZone = "America/Fortaleza";
   system.stateVersion = "25.05";
   nixpkgs.config.allowUnfree = true;
+  nix.settings.trusted-users = [ "root" "@wheel" ];
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.permittedInsecurePackages = [
     "electron-36.9.5"
@@ -64,6 +65,7 @@
     qbittorrent = {
       enable = true;
     };
+
     pipewire = {
       enable = true;
       alsa.enable = true;
@@ -228,9 +230,13 @@
       go
       lua
       lua-language-server
+      devenv
 
+      easyeffects
       spotify
       discord-ptb
+      vencord
+      vesktop
       obsidian
       kdePackages.kdenlive
 
@@ -271,6 +277,7 @@
         };
       };
     };
+
     interfaces.eth0.ipv4.addresses = [ { address = "192.168.1.99"; prefixLength = 24; } ];
     defaultGateway = "192.168.1.1";
     nameservers = ["1.1.1.1" "8.8.8.8" ];
