@@ -149,6 +149,7 @@
       ntfs3g
 
       zed-editor
+      vscode
       neovim
       gh
       docker-compose
@@ -202,6 +203,7 @@
       protonplus
       bottles 
 
+      opencode
       bluetui
       television
       btop
@@ -234,7 +236,6 @@
 
       easyeffects
       spotify
-      discord-ptb
       vencord
       vesktop
       obsidian
@@ -280,7 +281,7 @@
 
     interfaces.eth0.ipv4.addresses = [ { address = "192.168.1.99"; prefixLength = 24; } ];
     defaultGateway = "192.168.1.1";
-    nameservers = ["1.1.1.1" "8.8.8.8" ];
+    nameservers = ["192.168.15.50"];
     useDHCP = false;
     hosts = {
       "185.199.110.133" = ["raw.githubusercontent.com"];
