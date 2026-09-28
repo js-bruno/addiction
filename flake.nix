@@ -1,18 +1,14 @@
 {
-  description = "My declartive desktop configuration";
+  description = "my flake that i put on unstable by mistake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
+    wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
   };
-  outputs = {self, nixpkgs, ... }@inputs:
-  {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
 
-      modules = [
-        ./configuration.nix
-      ];
-    };
-  };
+  outputs = inputs: inputs.flake-parts.lib.mkFlake
+  {inherit inputs;}
+  (inputs.import-tree ./modules);
 }
