@@ -1,5 +1,5 @@
-{self, inputs, ...}: {
-  flake.nixosModules.myDesktopConfiguration = { pkgs, lib, ... }: {
+{self, ...}: {
+  flake.nixosModules.myDesktopConfiguration = { pkgs, ... }: {
     imports = [
       self.nixosModules.myDesktopHardware
       self.nixosModules.niri
@@ -66,6 +66,10 @@
         KERNEL=="uinput", GROUP="uinput", MODE="0660"
         '';
 
+      immich = {
+        enable = false;
+        mediaLocation = "/mnt/hard-disk/archive/immich";
+      };
       qbittorrent = {
         enable = true;
       };
@@ -93,6 +97,10 @@
         openFirewall = true;
       };
 
+      earlyoom = {
+        enable = true;
+        freeMemThreshold = 5;
+      };
       input-remapper.enable = true;
       printing.enable = true;
       pulseaudio.enable = false;
@@ -159,6 +167,7 @@
 
           zed-editor
           vscode
+          helix
           neovim
           gh
           docker-compose
@@ -283,7 +292,7 @@
             connection = {
               id = "Conexão cabeada 1";
               type = "ethernet";
-              interface-name = "eth0";
+              interface-name = "Conexão cabeada 1";
               autoconnect = true;
               autoconnect-priority = 10;
             };
@@ -301,7 +310,7 @@
         };
       };
 
-      interfaces.eth0.ipv4.addresses = [ { address = "192.168.1.99"; prefixLength = 24; } ];
+      interfaces.eth0.ipv4.addresses = [ { address = "192.168.15.99"; prefixLength = 24; } ];
       defaultGateway = "192.168.1.1";
       nameservers = ["192.168.15.50"];
       useDHCP = false;
@@ -319,6 +328,7 @@
         ];
       };
     };
+
     i18n = {
       defaultLocale = "pt_BR.UTF-8";
       supportedLocales = [

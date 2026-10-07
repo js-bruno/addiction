@@ -1,22 +1,17 @@
 {self, inputs, ...}: {
-  flake.nixosModules.niri = {pkgs, lib, ...}: {
+  flake.nixosModules.niri = {pkgs, ...}: {
     programs.niri = {
       enable = true;
       package = self.packages.${pkgs.stdenv.hostPlatform.system}.myNiri;
     };
   };
 
-
   perSystem = { pkgs, lib, self', ...}: {
     packages.myNiri = inputs.wrapper-modules.wrappers.niri.wrap {
       inherit pkgs;
       settings = {
-        spawn-at-startup = [
-          (lib.getExe self'.packages.myNoctalia)
-        ];
-        
+        spawn-at-startup = [ (lib.getExe self'.packages.myNoctalia) ];
         xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
-
         prefer-no-csd = _:{};
 
         input = {
@@ -43,7 +38,7 @@
 
         binds  = {
           "Mod+Space".spawn-sh = "${lib.getExe self'.packages.myNoctalia} ipc call launcher toggle";
-          "Mod+Return".spawn-sh = lib.getExe pkgs.alacritty;
+          "Mod+Return".spawn-sh = lib.getExe pkgs.kitty;
           "Mod+Q".close-window = _:{};
 
           "Mod+F".maximize-column = _:{};
@@ -100,7 +95,6 @@
           "Mod+WheelScrollUp".focus-column-right = _:{};
           "Mod+Ctrl+WheelScrollDown".focus-workspace-down = _:{};
           "Mod+Ctrl+WheelScrollUp".focus-workspace-up = _:{};
-
         };
       };
     };

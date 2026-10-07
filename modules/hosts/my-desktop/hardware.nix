@@ -7,14 +7,14 @@
 
     zramSwap = {
       enable = true;
-      memoryPercent = 50;
+      memoryPercent = 25;
+      priority = 100;
     };
 
     boot = {
       loader.systemd-boot.enable = true;
       loader.efi.canTouchEfiVariables = true;
-      tmp.useTmpfs = true;
-      tmp.tmpfsSize = "10G";
+      tmp.cleanOnBoot = true;
       kernelModules = [ "uinput" "kvm-amd" ];
       kernel.sysctl = {
         "net.ipv4.ip_unprivileged_port_start" = 50;
@@ -22,6 +22,12 @@
         "net.ipv6.conf.all.disable_ipv6" = 1;
         "net.ipv6.conf.default.disable_ipv6" = 1;
         "net.ipv6.conf.eth0.disable_ipv6" = 1;
+        "vm.swappiness" = 10;
+        "vm.vfs_cache_pressure" = 50;
+        "vm.max_map_count" = 2147483642;
+        "vm.min_free_kbytes" = 262144;
+        "vm.dirty_ratio" = 10;
+        "vm.dirty_background_ratio" = 5;
       };
       initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
       initrd.kernelModules = [ ];
@@ -55,7 +61,7 @@
       options = [ "auto" "nofail" ];
     };
 
-    swapDevices = [ ];
+    swapDevices = [ { device = "/home/.swapfile"; size = 16384; priority = 10; } ];
 
 # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
 # (the default) this is the recommended approach. When using systemd-networkd it's
