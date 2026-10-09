@@ -221,6 +221,7 @@
           protonplus
           bottles 
 
+          fastfetch
           opencode
           bluetui
           television
@@ -359,6 +360,7 @@
   };
 
   services = {
+    tailscale.enable = true;
     displayManager = {
       defaultSession = "plasmax11";
       gdm.enable = true;
